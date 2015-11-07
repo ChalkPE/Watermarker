@@ -5,17 +5,14 @@ import pe.chalk.watermarker.util.SystemUiHider;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import java.io.IOException;
-import java.io.InputStream;
 
 public class MainActivity extends Activity {
     private SystemUiHider mSystemUiHider;
@@ -85,7 +82,7 @@ public class MainActivity extends Activity {
     }
 
     public void selectImage(View view){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
 
         this.startActivityForResult(intent, 19132);
@@ -97,10 +94,9 @@ public class MainActivity extends Activity {
         if(requestCode == 19132 && resultCode == Activity.RESULT_OK){
             if(data == null) return;
 
-            try(InputStream input = this.getContentResolver().openInputStream(data.getData())){
-                Bitmap bitmap = BitmapFactory.decodeStream(input);
-                this.imageContent.setImageBitmap(bitmap);
-            }catch(IOException e){
+            try{
+                this.imageContent.setImageURI(data.getData());
+            }catch(Exception e){
                 e.printStackTrace();
             }
         }
