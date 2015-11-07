@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 
 public class MainActivity extends Activity {
@@ -35,37 +36,57 @@ public class MainActivity extends Activity {
 
         this.mSystemUiHider = SystemUiHider.getInstance(this, contentView, SystemUiHider.FLAG_HIDE_NAVIGATION);
         this.mSystemUiHider.setup();
-        this.mSystemUiHider.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener(){
+        this.mSystemUiHider.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
             private int mControlsHeight;
             private int mShortAnimTime;
 
-            @Override @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-            public void onVisibilityChange(boolean visible){
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2){
+            @Override
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+            public void onVisibilityChange(boolean visible) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
                     controlsView.setVisibility(visible ? View.VISIBLE : View.GONE);
-                }else{
-                    if(this.mControlsHeight == 0) this.mControlsHeight = controlsView.getHeight();
-                    if(this.mShortAnimTime == 0)  this.mShortAnimTime  = getResources().getInteger(android.R.integer.config_shortAnimTime);
+                } else {
+                    if (this.mControlsHeight == 0) this.mControlsHeight = controlsView.getHeight();
+                    if (this.mShortAnimTime == 0)
+                        this.mShortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
                     controlsView.animate().translationY(visible ? 0 : this.mControlsHeight).setDuration(this.mShortAnimTime);
                 }
 
-                if(visible) delayedHide(3000);
+                if (visible) delayedHide(3000);
             }
         });
 
-        contentView.setOnClickListener(new View.OnClickListener(){
+        contentView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 MainActivity.this.mSystemUiHider.toggle();
             }
         });
 
-        this.findViewById(R.id.dummy_button).setOnTouchListener(new View.OnTouchListener(){
+        this.findViewById(R.id.dummy_button).setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent){
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 MainActivity.this.delayedHide(3000);
                 return false;
+            }
+        });
+
+        final ImageView watermark = (ImageView) this.findViewById(R.id.watermark);
+        ((SeekBar) this.findViewById(R.id.alpha_seek)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                watermark.setAlpha(progress / (seekBar.getMax() + 0f));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar){
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar){
+
             }
         });
     }

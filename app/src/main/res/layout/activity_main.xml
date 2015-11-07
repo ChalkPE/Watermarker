@@ -24,6 +24,7 @@
             android:layout_gravity="bottom|start"
             android:src="@drawable/watermark"
             android:scaleType="fitCenter"
+            android:alpha="0.3"
             android:contentDescription="@string/dummy_content" />
 
     </FrameLayout>
@@ -39,12 +40,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:background="@color/black_overlay"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             tools:ignore="UselessParent">
+
+            <SeekBar
+                android:id="@+id/alpha_seek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10000"
+                android:progress="3000"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="10dp" />
 
             <Button
                 android:id="@+id/dummy_button" style="?metaButtonBarButtonStyle"
-                android:layout_weight="1" android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/dummy_button"
                 android:onClick="selectImage" />
